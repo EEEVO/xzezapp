@@ -99,6 +99,9 @@ export default {
   justify-content: space-between;
   /deep/ .fild-body {
     justify-content: space-between;
+    /deep/ .u-flex-1 {
+      flex: 1;
+    }
   }
   .footer {
     width: 100%;

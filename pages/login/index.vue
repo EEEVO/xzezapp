@@ -7,11 +7,7 @@
       <wInput v-model="phoneData" type="text" maxlength="11" placeholder="手机号"></wInput>
       <wInput v-model="verCode" type="number" maxlength="6" placeholder="验证码" isShowCode codeText="获取验证码" setTime="30" ref="runCode" @setCode="getVerCode"></wInput>
     </view>
-    <wButton type="default" text="手机验证码登录" :rotate="isRotate" @click.native="startLogin" class="wbutton"></wButton>
-    <!-- 其他登录 -->
-    <view class="other_login cuIcon">
-      <view class="login_icon"><view class="cuIcon-weixin" @tap="login_weixin"></view></view>
-    </view>
+    <wButton type="default" text="绑定手机" :rotate="isRotate" @click.native="startLogin" class="wbutton"></wButton>
   </view>
 </template>
 

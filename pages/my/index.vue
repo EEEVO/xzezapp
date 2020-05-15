@@ -2,10 +2,9 @@
   <view>
     <view class="header" v-bind:class="{ status: isH5Plus }">
       <view class="userinfo" v-if="isLogin">
-        <view class="face"><image :src="userinfo.face"></image></view>
+        <view class="face"><image :src="userinfo.avatarUrl"></image></view>
         <view class="info">
-          <view class="username">{{ userinfo.username }}</view>
-          <view class="integral">{{ userinfo.integral }}</view>
+          <view class="username">{{ userinfo.nickName }}</view>
         </view>
       </view>
       <view class="userinfo" v-else>
@@ -36,15 +35,22 @@ export default {
   },
   onLoad() {
     this.login();
-    //加载
-    this.init();
   },
   mounted() {
+    // 暂时无用
     this.isLogin = getUserToken() ? true : false;
   },
   methods: {
     getUserInfo(e) {
       console.log(e.detail.userInfo);
+      this.userinfo = {
+        ...e.detail.userInfo
+      };
+      this.isLogin = true;
+      // TODO:获取用户信息之后,去检查当前微信是否绑定过手机号,如果绑定过就不跳转到绑定页
+      // uni.navigateTo({
+      //   url: '../login/index'
+      // });
     },
     login() {
       wx.login({
@@ -58,16 +64,6 @@ export default {
         }
       });
     },
-    init() {
-      const userPhone = getAccountId();
-      console.info('userPhone', userPhone);
-      //用户信息
-      this.userinfo = {
-        face: '../../static/personalCenter/header.jpeg',
-        username: '张浩然',
-        integral: userPhone
-      };
-    },
     //用户点击列表项
     toPage(list_i, li_i) {
       if (getUserToken()) {
@@ -76,9 +72,6 @@ export default {
         });
       } else {
         uni.showToast({ title: '请先登录', icon: 'none' });
-        // uni.navigateTo({
-        //   url: '../login/index'
-        // });
       }
     }
   }
