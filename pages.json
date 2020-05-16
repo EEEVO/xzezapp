@@ -52,7 +52,7 @@
       {
         "text": "功能",
         "pagePath": "pages/function/index",
-        "iconPath": "static/tabbar/icon_my.png",
+        "iconPath": "static/tabbar/icon_function.png",
         "selectedIconPath": "static/tabbar/icon_function_EL.png"
       },
       {

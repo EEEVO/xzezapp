@@ -30,7 +30,7 @@ export default {
       isLogin: false,
       isH5Plus: false,
       userinfo: {},
-      severList: [[{ name: '申请记录', icon: 'personalData.png', link: '../userData/index' }, { name: '企业身份核验', icon: 'myDevice.png', link: '../myDevice/index' }]]
+      severList: [[{ name: '申请记录', icon: 'applyRec.png', link: '../userData/index' }, { name: '企业身份核验', icon: 'check.png', link: '../myDevice/index' }]]
     };
   },
   onLoad() {
