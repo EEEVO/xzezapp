@@ -22,7 +22,7 @@
   </view>
 </template>
 <script>
-import { getUserToken, getAccountId } from '@/utils/token.js';
+import { getUserToken, setUserToken, getAccountId } from '@/utils/token.js';
 
 export default {
   data() {
@@ -48,6 +48,7 @@ export default {
         ...e.detail.userInfo
       };
       this.isLogin = true;
+	  setUserToken(this.userinfo);
       // TODO:获取用户信息之后,去检查当前微信是否绑定过手机号,如果绑定过就不跳转到绑定页
       // uni.navigateTo({
       //   url: '../login/index'
@@ -67,13 +68,13 @@ export default {
     },
     //用户点击列表项
     toPage(list_i, li_i) {
-      // if (getUserToken()) {
+      if (getUserToken()) {
         uni.navigateTo({
           url: this.severList[list_i][li_i].link
         });
-      // } else {
-        // uni.showToast({ title: '请先登录', icon: 'none' });
-      // }
+      } else {
+        uni.showToast({ title: '请先登录', icon: 'none' });
+      }
     }
   }
 };
