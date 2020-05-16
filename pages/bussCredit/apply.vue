@@ -38,8 +38,9 @@ export default {
 		}
 		const res = await applyConfirm('2d34d7b18cf62de6547adde3ea992ae2', this.phoneNo, this.verifyCode);
 		if(0 == res.respcode){
+			let url = 'confirm?phoneNo=' + this.phoneNo + '&verifyCode=' + this.verifyCode;
 			uni.navigateTo({
-			  url: 'confirm?phoneNo=' + this.phoneNo + '&verifyCode=' + this.verifyCode;
+			  url: url
 			});
 		}else{
 			uni.showToast({ title: res.respinfo, icon: 'none' });
