@@ -9,11 +9,11 @@
 		  	<text class="left">联系电话</text>
 		  	<text class="right">{{mangerTel}}</text>
 		  </view>
-		  <u-button class="btntel" @click="applyImmediate">联系客户经理</u-button>
+		  <u-button class="btntel" @click="telManger">联系客户经理</u-button>
 	  </view>
 	  <view v-else>
 		  <view class="unapply">您未申请贷款产品，暂无专属客户经理</view>
-		  <u-button class="btntel" @click="applyImmediate">现在申请贷款</u-button>
+		  <u-button class="btntel" @click="applyNow">现在申请贷款</u-button>
 	  </view>
   </view>
 </template>
@@ -32,14 +32,13 @@ export default {
     };
   },
   methods: {
-    applyImmediate() {
-      console.log('立即申请');
+    telManger() {
+	  uni.makePhoneCall({
+	      phoneNumber: this.mangerTel //仅为示例
+	  });
     },
 	async getSalesman(){
-		console.log("执行获取经理方法");
 		const res = await getSalesman('2d34d7b18cf62de6547adde3ea992ae2');
-		console.log("返回");
-		console.log(res);
 		if(0 == res.respcode){
 			this.mangerName = res.data.name;
 			this.mangerTel = res.data.phone;
@@ -48,7 +47,12 @@ export default {
 			this.hasManger = false;
 			// uni.showToast({ title: res.respinfo, icon: 'none' });
 		}
-	}
+	},
+	applyNow() {
+		uni.switchTab({
+			url: '/pages/home/index'
+		});
+	},
   },
   onLoad(option) {
     this.getSalesman();
