@@ -60,7 +60,12 @@
   }, {
     "path": "pages/userData/check",
     "style": {
-      "navigationBarTitleText": "企业身份核验"
+      "navigationBarTitleText": "核验社会信用代码"
+    }
+  }, {
+    "path": "pages/userData/checktwo",
+    "style": {
+      "navigationBarTitleText": "核验法人身份证号码"
     }
   }],
   "tabBar": {

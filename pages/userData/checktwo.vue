@@ -1,18 +1,10 @@
 <template>
   <view>
 	  <view class="row">
-	  	<text class="left">统一社会信用代码</text>
-	  	<input class="right" type="text" placeholder="请输入统一社会信用代码" placeholder-class="placeholder"/>
+	  	<text class="left">企业法人身份证号码</text>
+	  	<input class="right" type="text" placeholder="请输入企业法人身份证号码" placeholder-class="placeholder"/>
 	  </view>
-	  <view class="row">
-	  	<text class="left">企业名称</text>
-	  	<text class="right">河北*****有限公司</text>
-	  </view>
-	  <view class="row">
-	  	<text class="left">法定代表人</text>
-	  	<text class="right">张**</text>
-	  </view>
-	  <u-button class="btntel" @click="applyImmediate">确认，下一步</u-button>
+	  <u-button class="btntel" @click="applyImmediate">确认</u-button>
   </view>
 </template>
 
@@ -27,9 +19,7 @@ export default {
   },
   methods: {
     applyImmediate() {
-      uni.navigateTo({
-        url: `checktwo`
-      });
+      console.log('立即申请');
     }
   },
   onLoad(option) {
@@ -50,7 +40,7 @@ export default {
 		font-size: 30upx;
 		
 		.left{
-			width: 250upx;
+			width: 270upx;
 			text-align: right;
 		}
 		.right{
