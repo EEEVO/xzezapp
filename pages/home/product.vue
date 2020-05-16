@@ -9,17 +9,17 @@
     </view>
     <view class="product-main">
       <view class="product-main-interestRate">
-        <view class="product-main-interestRate-num">{{ item.minrate }}~{{ item.maxrate }}</view>
+        <view class="product-main-interestRate-num">{{ item.minrate }}%~{{ item.maxrate }}%</view>
         <view class="product-main-interestRate-subTitle">贷款利率</view>
       </view>
       <view class="product-main-introduction">
         <view class="product-main-introduction-money">
           企业最高贷款
-          <span>{{ item.maxloan }}</span>
+          <span>{{ item.maxloan }}万</span>
         </view>
         <view class="product-main-introduction-time">
           最高贷款期限
-          <span>{{ item.maxterm }}</span>
+          <span>{{ item.maxterm }}{{ item.termunit }}</span>
         </view>
       </view>
       <view><u-button :custom-style="customStyle" size="mini" @click="applyImmediate">立即申请</u-button></view>
@@ -34,27 +34,28 @@ export default {
       type: Object,
       default() {
         // TODO:此处id预留，根据后端接口来
-        return { id: '0', productname: '阳光e微贷', minrate: '4%', maxrate: '8%', maxloan: '200万元', maxterm: '1年' };
+        return { productid: '0', productname: '阳光e微贷', minrate: '4%', maxrate: '8%', maxloan: '200万元', maxterm: '1年', termunit: '年' };
       }
     }
   },
   data() {
     return {
       customStyle: {
-        fontSize: '12px'
+        fontSize: '12px',
+        whiteSpace: 'nowrap'
       }
     };
   },
   methods: {
     goProductDetails() {
       uni.navigateTo({
-        url: `../product/productDetail?productId=${this.item.id}`
+        url: `../product/productDetail?productId=${this.item.productid}`
       });
       console.log('详情');
     },
     applyImmediate() {
       uni.navigateTo({
-        url: `../product/productApplication?productId=${this.item.id}`
+        url: `../product/productApplication?productId=${this.item.productid}`
       });
       console.log('立即申请');
     }
@@ -111,7 +112,7 @@ export default {
       justify-content: space-evenly;
       &-num {
         color: red;
-        font-size: 24px;
+        font-size: 20px;
       }
       &-subTitle {
         font-size: 13px;
@@ -126,6 +127,7 @@ export default {
       view {
         font-size: 14px;
         color: #00d3c4;
+        white-space: 'nowrap';
         span {
           color: #333333;
         }

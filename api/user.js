@@ -6,16 +6,15 @@ import http from '@/utils/request.js'
  */
 export const sendVerificationCode = (sessionid, phone) => {
   return http.get('sendVerificationCode.do', {
-	params: {
-		sessionid,
-	    phone
-	}
+    params: {
+      sessionid,
+      phone
+    }
   })
 }
 
-// export const sendVerificationCode = (sessionid, phone) => {
-//   return http.post('sendVerificationCode.do', {
-// 	sessionid,
-// 	phone
-//   })
-// }
+export const wxCode2Session = (code) => {
+  return http.post('wxCode2Session.do', {
+    code
+  })
+}

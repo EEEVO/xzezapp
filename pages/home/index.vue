@@ -1,39 +1,54 @@
 <template>
   <view class="content">
     <u-swiper :list="list"></u-swiper>
-    <product></product>
+    <product v-for="(item, index) of productList" :key="index" :item="item"></product>
   </view>
 </template>
 
 <script>
 import product from './product';
+import { getProductPicList, getProductList } from '@/api/home.js';
 export default {
   components: {
     product
   },
   data() {
     return {
+      lunboPic: 'https://www.haimadata.cn/abcxzez/api/getPicture.do?pictureid=',
       customStyle: {
         fontSize: '12px'
       },
       list: [
         {
-          image: '/static/uView/1.jpeg',
-          title: '蒹葭苍苍，白露为霜。所谓伊人，在水一方'
+          image: '/static/uView/1.jpeg'
         },
         {
-          image: '/static/uView/2.jpeg',
-          title: '溯洄从之，道阻且长。溯游从之，宛在水中央'
+          image: '/static/uView/2.jpeg'
         },
         {
-          image: '/static/uView/3.jpeg',
-          title: '蒹葭萋萋，白露未晞。所谓伊人，在水之湄'
+          image: '/static/uView/3.jpeg'
         }
-      ]
+      ],
+      productList: []
     };
   },
-
+  onShow() {
+    this.getProductPicList();
+    this.getProductList();
+  },
   methods: {
+    async getProductPicList() {
+      const res = await getProductPicList();
+      this.list = res.data.map(item => {
+        return {
+          image: `${this.lunboPic}${item}`
+        };
+      });
+    },
+    async getProductList() {
+      const res = await getProductList();
+      this.productList = res.data;
+    },
     goProductDetails() {
       console.log('详情');
     }

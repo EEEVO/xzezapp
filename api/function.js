@@ -7,8 +7,8 @@ export const applyConfirm = (sessionid, phone, verifycode) => {
   return http.get('confimBizAuthorization.do', {
     params: {
       sessionid,
-	  phone,
-	  verifycode
+      phone,
+      verifycode
     }
   })
 }
@@ -29,8 +29,8 @@ export const confimCreditAuthorization = (sessionid, phone, verifycode) => {
   return http.get('confimCreditAuthorization.do', {
     params: {
       sessionid,
-	  phone,
-	  verifycode
+      phone,
+      verifycode
     }
   })
 }

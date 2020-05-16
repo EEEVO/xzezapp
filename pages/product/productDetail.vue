@@ -1,26 +1,37 @@
 <template>
   <view class="main">
-    产品详情
+    <view v-html="producthtml"></view>
     <view class="footer"><u-button @click="applyImmediate">立即申请</u-button></view>
   </view>
 </template>
 
 <script>
+import { getProductContent } from '@/api/home.js';
 export default {
   data() {
     return {
       customStyle: {
         fontSize: '12px'
-      }
+      },
+      productId: '',
+      producthtml: ''
     };
   },
   methods: {
+    async getProductContent() {
+      const res = await getProductContent(this.productId);
+      this.producthtml = res.data.producthtml;
+    },
     applyImmediate() {
-      console.log('立即申请');
+      uni.navigateTo({
+        url: `./productApplication?productId=${this.productId}`
+      });
     }
   },
   onLoad(option) {
     console.log(option);
+    this.productId = option.productId;
+    this.getProductContent();
   }
 };
 </script>

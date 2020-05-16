@@ -2,14 +2,18 @@
   <view>
     <view class="header" v-bind:class="{ status: isH5Plus }">
       <view class="userinfo" v-if="isLogin">
-        <view class="face"><image :src="userinfo.avatarUrl"></image></view>
+        <view class="face">
+          <!-- <image :src="userinfo.avatarUrl"></image> -->
+          <open-data type="userAvatarUrl"></open-data>
+        </view>
         <view class="info">
-          <view class="username">{{ userinfo.nickName }}</view>
+          <open-data class="username" type="userNickName"></open-data>
+          <!-- <view>{{ userinfo.nickName }}</view> -->
         </view>
       </view>
       <view class="userinfo" v-else>
         <view class="face"><image src="../../static/personalCenter/header.jpeg"></image></view>
-        <view class="login"><button class="username" open-type="getUserInfo" @getuserinfo="getUserInfo">点击登录/注册</button></view>
+        <view class="login"><button class="username" open-type="getUserInfo" @getuserinfo="getUserInfo">点击注册</button></view>
       </view>
     </view>
     <view class="list" v-for="(list, list_i) in severList" :key="list_i">
@@ -23,6 +27,7 @@
 </template>
 <script>
 import { getUserToken, setUserToken, getAccountId } from '@/utils/token.js';
+import { wxCode2Session } from '@/api/user.js';
 
 export default {
   data() {
@@ -30,16 +35,11 @@ export default {
       isLogin: false,
       isH5Plus: false,
       userinfo: {},
-      severList: [[{ name: '申请记录', icon: 'applyRec.png', link: '../userData/applyRec' }, 
-				   { name: '企业身份核验', icon: 'check.png', link: '../userData/check' }]]
+      severList: [[{ name: '申请记录', icon: 'applyRec.png', link: '../userData/applyRec' }, { name: '企业身份核验', icon: 'check.png', link: '../userData/check' }]]
     };
   },
   onLoad() {
     this.login();
-  },
-  mounted() {
-    // 暂时无用
-    this.isLogin = getUserToken() ? true : false;
   },
   methods: {
     getUserInfo(e) {
@@ -47,19 +47,38 @@ export default {
       this.userinfo = {
         ...e.detail.userInfo
       };
-      this.isLogin = true;
-	  setUserToken(this.userinfo);
       // TODO:获取用户信息之后,去检查当前微信是否绑定过手机号,如果绑定过就不跳转到绑定页
-      // uni.navigateTo({
-      //   url: '../login/index'
-      // });
+      uni.navigateTo({
+        url: '../login/index'
+      });
     },
     login() {
       wx.login({
-        success(res) {
+        async success(res) {
+          wx.getUserInfo({
+            success: function(res) {
+              var userInfo = res.userInfo;
+              var nickName = userInfo.nickName;
+              var avatarUrl = userInfo.avatarUrl;
+              var gender = userInfo.gender; //性别 0：未知、1：男、2：女
+              var province = userInfo.province;
+              var city = userInfo.city;
+              var country = userInfo.country;
+            }
+          });
           if (res.code) {
-            console.log(res.code);
-            // TODO:像后端发送code
+            const tem = await wxCode2Session(res.code);
+            // 判断当前是否绑定了手机号,如果未绑定,则需要去绑定
+            if (tem.data.phone.length > 0) {
+              this.isLogin = true;
+            }
+            if (tem.respcode === 0) {
+              setUserToken(tem.data.sessionid);
+            } else {
+              uni.showToast({
+                title: tem.respinfo
+              });
+            }
           } else {
             console.log('登录失败！' + res.errMsg);
           }
