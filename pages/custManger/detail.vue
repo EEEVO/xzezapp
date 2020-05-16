@@ -1,33 +1,57 @@
 <template>
   <view>
-	  <view class="row">
-	  	<text class="left">专属客户经理</text>
-	  	<text class="right">张经理</text>
+	  <view v-if="hasManger">
+		  <view class="row">
+		  	<text class="left">专属客户经理</text>
+		  	<text class="right">{{mangerName}}</text>
+		  </view>
+		  <view class="row">
+		  	<text class="left">联系电话</text>
+		  	<text class="right">{{mangerTel}}</text>
+		  </view>
+		  <u-button class="btntel" @click="applyImmediate">联系客户经理</u-button>
 	  </view>
-	  <view class="row">
-	  	<text class="left">联系电话</text>
-	  	<text class="right">18615539629</text>
+	  <view v-else>
+		  <view class="unapply">您未申请贷款产品，暂无专属客户经理</view>
+		  <u-button class="btntel" @click="applyImmediate">现在申请贷款</u-button>
 	  </view>
-	  <u-button class="btntel" @click="applyImmediate">联系客户经理</u-button>
   </view>
 </template>
 
 <script>
+import { getSalesman } from '@/api/function.js';
 export default {
   data() {
     return {
       customStyle: {
         fontSize: '12px'
-      }
+      },
+	  mangerName: '',
+	  mangerTel: '',
+	  hasManger: false
     };
   },
   methods: {
     applyImmediate() {
       console.log('立即申请');
-    }
+    },
+	async getSalesman(){
+		console.log("执行获取经理方法");
+		const res = await getSalesman('2d34d7b18cf62de6547adde3ea992ae2');
+		console.log("返回");
+		console.log(res);
+		if(0 == res.respcode){
+			this.mangerName = res.data.name;
+			this.mangerTel = res.data.phone;
+			this.hasManger = true;
+		}else{
+			this.hasManger = false;
+			// uni.showToast({ title: res.respinfo, icon: 'none' });
+		}
+	}
   },
   onLoad(option) {
-    console.log(option);
+    this.getSalesman();
   }
 };
 </script>
@@ -59,5 +83,13 @@ export default {
 		height: 70upx;
 		margin: 160upx auto;
 		font-size: 30upx;
+	}
+	
+	.unapply{
+		display: flex;
+		align-items: center;
+		font-size: 35upx;
+		margin-top: 150upx;
+		justify-content: center;
 	}
 </style>
