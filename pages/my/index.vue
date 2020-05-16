@@ -30,7 +30,8 @@ export default {
       isLogin: false,
       isH5Plus: false,
       userinfo: {},
-      severList: [[{ name: '申请记录', icon: 'applyRec.png', link: '../userData/index' }, { name: '企业身份核验', icon: 'check.png', link: '../myDevice/index' }]]
+      severList: [[{ name: '申请记录', icon: 'applyRec.png', link: '../userData/applyRec' }, 
+				   { name: '企业身份核验', icon: 'check.png', link: '../userData/check' }]]
     };
   },
   onLoad() {
@@ -66,13 +67,13 @@ export default {
     },
     //用户点击列表项
     toPage(list_i, li_i) {
-      if (getUserToken()) {
+      // if (getUserToken()) {
         uni.navigateTo({
           url: this.severList[list_i][li_i].link
         });
-      } else {
-        uni.showToast({ title: '请先登录', icon: 'none' });
-      }
+      // } else {
+        // uni.showToast({ title: '请先登录', icon: 'none' });
+      // }
     }
   }
 };

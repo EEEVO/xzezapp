@@ -37,6 +37,31 @@
     "style": {
       "navigationBarTitleText": "产品申请"
     }
+  }, {
+    "path": "pages/bussCredit/apply",
+    "style": {
+      "navigationBarTitleText": "业务授权"
+    }
+  }, {
+    "path": "pages/bussCredit/confirm",
+    "style": {
+      "navigationBarTitleText": "授权确认"
+    }
+  }, {
+    "path": "pages/custManger/detail",
+    "style": {
+      "navigationBarTitleText": "客户经理"
+    }
+  }, {
+    "path": "pages/userData/applyRec",
+    "style": {
+      "navigationBarTitleText": "申请记录"
+    }
+  }, {
+    "path": "pages/userData/check",
+    "style": {
+      "navigationBarTitleText": "企业身份核验"
+    }
   }],
   "tabBar": {
     "color": "#999",

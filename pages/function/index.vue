@@ -11,25 +11,29 @@
 </template>
 
 <script>
+import { getUserToken, getAccountId } from '@/utils/token.js';
+	
 export default {
   components: {},
   data() {
     return {
 		severList: [[{ name: '房产评估', icon: 'house.png', link: '../userData/index' }, 
-					 { name: '业务授权', icon: 'grant.png', link: '../myDevice/index' },
-					 { name: '征信授权', icon: 'credit.png', link: '../myDevice/index' },
-					 { name: '客户经理', icon: 'manger.png', link: '../myDevice/index' }]]
+					 { name: '业务授权', icon: 'grant.png', link: '../bussCredit/apply' },
+					 { name: '征信授权', icon: 'credit.png', link: '../bussCredit/apply' },
+					 { name: '客户经理', icon: 'manger.png', link: '../custManger/detail' }]]
 	};
   },
   onLoad() {},
   methods: {
-	  toPage(a, b) {
-		console.log("a参数：" + a);
-		console.log("b参数：" + b);
-	    uni.navigateTo({
-	      url: `../product/productDetail?productId=${this.item.id}`
-	    });
-	    console.log('详情');
+	  //用户点击列表项
+	  toPage(list_i, li_i) {
+	    // if (getUserToken()) {
+	      uni.navigateTo({
+	        url: this.severList[list_i][li_i].link
+	      });
+	    // } else {
+	      // uni.showToast({ title: '请先登录', icon: 'none' });
+	    // }
 	  }
   },
   watch: {}
