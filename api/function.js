@@ -34,3 +34,13 @@ export const confimCreditAuthorization = (sessionid, phone, verifycode) => {
     }
   })
 }
+
+
+/**
+ * 查询专属客户经理信息
+ */
+export const getSalesman = (sessionid) => {
+  return http.post('getSalesman.do', {
+    sessionid
+  })
+}

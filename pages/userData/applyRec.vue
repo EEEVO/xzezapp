@@ -3,7 +3,7 @@
 	<view class="row" v-for="(li, li_i) in severList">
 		<view class="signrow">
 			<text class="left">产品名称</text>
-			<text class="right">{{ li.name }}</text>
+			<text class="right">{{ li.productname }}</text>
 		</view>
 		<view class="signrow">
 			<text class="left">申请日期</text>
@@ -15,23 +15,35 @@
 		</view>
 		<view class="signrow">
 			<text class="left">需求描述</text>
-			<text class="right">{{ li.remark }}</text>
+			<text class="right">{{ li.descr }}</text>
 		</view>
 	</view>
   </view>
 </template>
 
 <script>
+import { getApplyHis } from '@/api/user.js';
 export default {
   data() {
     return {
-      items: ['全部设备', '个人设备'],
       current: 0,
-	  severList: [{ name: '税e贷', applydate: '2020-05-08', status: '待审核', remark: '需求描述需求描述' },
-	  				   { name: '商超e贷', applydate: '2020-05-08', status: '审核通过', remark: '需求描述需求描述' }]
+	  severList: []
     };
   },
-  methods: {}
+  methods: {
+	  async getApplyHis() {
+		  const res = await getApplyHis('2d34d7b18cf62de6547adde3ea992ae2');
+		  console.log(res);
+		  if(0 == res.respcode){
+			 this.severList = res.data;
+		  }else{
+			uni.showToast({ title: res.respinfo, icon: 'none' });
+		  }
+	  }
+  },
+  onLoad(option){
+	  this.getApplyHis();
+  }
 };
 </script>
 
