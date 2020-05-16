@@ -2,32 +2,61 @@
 	<view class="content">
 		<view class="row">
 			<text class="tit">手机号</text>
-			<input class="input" type="text" placeholder="请输入手机号码" placeholder-class="placeholder"/>
+			<input class="input" v-model="phoneNo" type="text" placeholder="请输入手机号码" placeholder-class="placeholder"/>
 		</view>
 		<view class="row">
 			<text class="tit">验证码</text>
-			<input class="input" type="text" placeholder="请输入验证码" placeholder-class="placeholder"/>
-			<button class="btnvercode">获取验证码</button>
+			<input class="input" type="text" v-model="verifyCode" placeholder="请输入验证码" placeholder-class="placeholder"/>
+			<button class="btnvercode" @click="sendCode">获取验证码</button>
 		</view>
 		<u-button class="btnconfirm" @click="applyConfirm">确认授权</u-button>
 	</view>
 </template>
 
 <script>
+import { sendVerificationCode } from '@/api/user.js';
+import { applyConfirm } from '@/api/function.js';
 export default {
   data() {
     return {
       customStyle: {
         fontSize: '12px'
-      }
+      },
+	  phoneNo: '', //手机号码
+	  verifyCode: ''
     };
   },
   methods: {
-    applyConfirm() {
-      uni.navigateTo({
-        url: `confirm`
-      });
-    }
+    async applyConfirm() {
+		if(!this.phoneNo){
+			uni.showToast({ title: '请输入手机号码', icon: 'none' });
+			return;
+		}
+		if(!this.verifyCode){
+			uni.showToast({ title: '请输入短信验证码', icon: 'none' });
+			return;
+		}
+		const res = await applyConfirm('2d34d7b18cf62de6547adde3ea992ae2', this.phoneNo, this.verifyCode);
+		if(0 == res.respcode){
+			uni.navigateTo({
+			  url: 'confirm?phoneNo=' + this.phoneNo + '&verifyCode=' + this.verifyCode;
+			});
+		}else{
+			uni.showToast({ title: res.respinfo, icon: 'none' });
+		}
+    },
+	async sendCode() {
+		if(!this.phoneNo){
+			uni.showToast({ title: '请输入手机号码', icon: 'none' });
+			return;
+		}
+		const res = await sendVerificationCode('2d34d7b18cf62de6547adde3ea992ae2', this.phoneNo);
+		if(0 == res.respcode){
+			uni.showToast({ title: '发送成功', icon: 'none' });
+		}else{
+			uni.showToast({ title: res.respinfo, icon: 'none' });
+		}
+	}
   },
   onLoad(option) {
     console.log(option);

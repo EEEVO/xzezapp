@@ -1,27 +1,47 @@
 <template>
   <view class="main">
-    业务授权书
-	业务授权书业务授权书业务授权书业务授权书业务授权书业务授权书
-    <view class="footer"><u-button @click="applyImmediate">确认</u-button></view>
+    <view class="creditcont">{{creditContent}}</view>
+    <view class="footer"><u-button :disabled="disabled" @click="confirm">确认</u-button></view>
   </view>
 </template>
 
 <script>
+import { getCreditAuthorization, confimCreditAuthorization } from '@/api/function.js';
 export default {
   data() {
     return {
       customStyle: {
         fontSize: '12px'
-      }
+      },
+	  creditContent: '',
+	  disabled: false,
+	  phoneNo: '',
+	  verifyCode: ''
     };
   },
   methods: {
-    applyImmediate() {
-      console.log('立即申请');
-    }
+    async confirm() {
+		const res = await confimCreditAuthorization('2d34d7b18cf62de6547adde3ea992ae2', this.phoneNo, this.verifyCode);
+		if(0 == res.respcode){
+			uni.showToast({ title: '征信授权成功', icon: 'none' });
+			this.disabled = true;
+		}else{
+			uni.showToast({ title: res.respinfo, icon: 'none' });
+		}
+    },
+	async getCreditAuthorization(){
+		const res = await getCreditAuthorization();
+		if(0 == res.respcode){
+			this.creditContent = res.data.contenthtml;
+		}else{
+			uni.showToast({ title: res.respinfo, icon: 'none' });
+		}
+	}
   },
   onLoad(option) {
-    console.log(option);
+	  this.getCreditAuthorization();
+	  this.phoneNo = option.phoneNo;
+	  this.verifyCode = option.verifyCode;
   }
 };
 </script>
@@ -33,6 +53,12 @@ export default {
   justify-content: space-between;
   flex-direction: column;
   align-items: center;
+  
+  .creditcont{
+	  display: flex;
+	  padding: 10upx;
+  }
+  
   .footer {
     width: 100%;
     display: flex;
