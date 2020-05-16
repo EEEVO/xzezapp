@@ -13,9 +13,10 @@ export const sendVerificationCode = (sessionid, phone) => {
   })
 }
 
-// export const sendVerificationCode = (sessionid, phone) => {
-//   return http.post('sendVerificationCode.do', {
-// 	sessionid,
-// 	phone
-//   })
-// }
+export const getApplyHis = (sessionid, phone) => {
+  return http.get('getApplyHis.do', {
+	params: {
+		sessionid
+	}
+  })
+}
