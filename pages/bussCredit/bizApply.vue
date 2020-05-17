@@ -13,11 +13,11 @@
     </u-cell-group>
     <u-button class="btnconfirm" :disabled="disabled" @click="applyConfirm">确认授权</u-button>
 	
-	<u-popup v-model="bookShow" mode="center" mask-click="false">
+	<u-popup v-model="bookShow" mode="center" mask-click="false" :mask-close-able="false">
 		<view class="creditcont">
 			{{creditContent}}
+			<u-button class="popupClose" size="mini" :disabled="closeDisable" @click="closeBook">关闭{{closebtnText}}</u-button>
 		</view>
-		<u-button class="popupClose" size="mini" :disabled="closeDisable" @click="closeBook">关闭{{closebtnText}}</u-button>
 	</u-popup>
   </view> 
 </template>
@@ -151,13 +151,17 @@ export default {
   .creditcont{
 	  display: flex;
 	  padding: 10upx;
+	  width:100vw;
+	  height:100vh;
   }
   
   .popupClose{
 	  display: flex;
-	  align-items: center;
 	  justify-content: center;
-	  margin-top: 20upx;
+	  position: fixed;  
+	  bottom: 10upx;
+	  margin: 20upx auto;
+	  text-align: center;
   }
   
 }
