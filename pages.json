@@ -48,11 +48,6 @@
       "navigationBarTitleText": "征信授权"
     }
   }, {
-    "path": "pages/bussCredit/confirm",
-    "style": {
-      "navigationBarTitleText": "授权确认"
-    }
-  }, {
     "path": "pages/custManger/detail",
     "style": {
       "navigationBarTitleText": "客户经理"

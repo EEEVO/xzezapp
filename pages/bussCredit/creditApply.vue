@@ -1,24 +1,32 @@
 <template>
   <view class="content">
-	  <u-checkbox-group class="bookGroup">
-		  <u-checkbox
-		  	@change="checkboxChange" 
-		  	v-model="book.checked" 
-		  	:name="book.name"
+	<u-checkbox-group class="bookGroup">
+		<u-checkbox
+			@change="checkboxChange" 
+			v-model="book.checked" 
+			:name="book.name"
 		  >{{book.name}}</u-checkbox>
-	  </u-checkbox-group>
-	
+	</u-checkbox-group>
     <u-cell-group>
       <u-field v-model="phoneNo" label="手机号" maxlength="11" placeholder="请输入手机号码"></u-field>
       <u-field v-model="verifyCode" label="验证码" placeholder="请输入验证码"><u-button size="mini" slot="button" type="success" @tap="sendCode">获取验证码</u-button></u-field>
     </u-cell-group>
     <u-button class="btnconfirm" :disabled="disabled" @click="applyConfirm">确认授权</u-button>
-  </view>
+	
+	<u-popup v-model="bookShow" mode="center" mask-click="false" :mask-close-able="false">
+		<view class="creditcont">
+			<view v-html="creditContent"></view>
+			<view class="footer">
+				<u-button :disabled="closeDisable" @click="closeBook">关闭{{closebtnText}}</u-button>
+			</view>
+		</view>
+	</u-popup>
+  </view> 
 </template>
 
 <script>
 import { sendVerificationCode } from '@/api/user.js';
-import { confimCreditAuthorization } from '@/api/function.js';
+import { confimCreditAuthorization, getCreditAuthorization } from '@/api/function.js';
 import { getUserToken } from '@/utils/token.js';
 import { regExpObj } from '@/utils/common.js';
 
@@ -32,12 +40,37 @@ export default {
 		  checked: false
 	  },
 	  disabled: false,
-	  checkList: []
+	  bookShow: false,
+	  creditContent: '',
+	  timer: 10,
+	  closebtnText: '(10s)',
+	  closeDisable: true
     };
   },
   methods: {
+	  countDown(){
+		this.closebtnText = '(10s)';
+		this.closeDisable = true;
+		let timer1 = setInterval(() => {
+			this.timer--;
+			this.closebtnText = `(${this.timer}s)`;
+			if (this.timer == -1) {
+				clearInterval(timer1);
+				this.timer = 10;
+				this.closebtnText = '';
+				this.closeDisable = false;
+			}
+		}, 1000);
+	  },
 	checkboxChange(e) {
 		this.book.checked = e.value;
+		if(e.value){
+			this.bookShow = true;
+			this.countDown();
+		}
+	},
+	closeBook(){
+		this.bookShow = false;
 	},
     async applyConfirm() {
       if (!regExpObj.regExpPhone(this.phoneNo)) {
@@ -81,10 +114,18 @@ export default {
       } else {
         uni.showToast({ title: res.respinfo, icon: 'none' });
       }
-    }
+    },
+	async getCreditAuthorization(){
+		const res = await getCreditAuthorization();
+		if(0 == res.respcode){
+			this.creditContent = res.data.contenthtml;
+		}else{
+			uni.showToast({ title: res.respinfo, icon: 'none' });
+		}
+	}
   },
   onLoad(option) {
-    console.log(option);
+    this.getCreditAuthorization();
   }
 };
 </script>
@@ -107,6 +148,23 @@ export default {
 	  display: flex;
 	  align-items: center;
 	  justify-content: center;
+  }
+  
+  .creditcont{
+	  padding: 10upx;
+	  width:100vw;
+	  min-height: 100vh;
+	  display: flex;
+	  justify-content: space-between;
+	  flex-direction: column;
+	  align-items: center;
+	  .footer {
+	    width: 100%;
+	    display: flex;
+	    justify-content: center;
+	    align-items: center;
+	    margin: 40px;
+	  }
   }
   
 }

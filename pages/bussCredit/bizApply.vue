@@ -15,8 +15,10 @@
 	
 	<u-popup v-model="bookShow" mode="center" mask-click="false" :mask-close-able="false">
 		<view class="creditcont">
-			{{creditContent}}
-			<u-button class="popupClose" size="mini" :disabled="closeDisable" @click="closeBook">关闭{{closebtnText}}</u-button>
+			<view v-html="creditContent"></view>
+			<view class="footer">
+				<u-button :disabled="closeDisable" @click="closeBook">关闭{{closebtnText}}</u-button>
+			</view>
 		</view>
 	</u-popup>
   </view> 
@@ -149,19 +151,20 @@ export default {
   }
   
   .creditcont{
-	  display: flex;
 	  padding: 10upx;
 	  width:100vw;
-	  height:100vh;
-  }
-  
-  .popupClose{
+	  min-height: 100vh;
 	  display: flex;
-	  justify-content: center;
-	  position: fixed;  
-	  bottom: 10upx;
-	  margin: 20upx auto;
-	  text-align: center;
+	  justify-content: space-between;
+	  flex-direction: column;
+	  align-items: center;
+	  .footer {
+	    width: 100%;
+	    display: flex;
+	    justify-content: center;
+	    align-items: center;
+	    margin: 40px;
+	  }
   }
   
 }
