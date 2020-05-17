@@ -6,6 +6,9 @@ Vue.use(uView);
 
 Vue.config.productionTip = false
 
+//挂载云图床
+Vue.prototype.$pic = "https://xzez.oss-cn-beijing.aliyuncs.com/icon"
+
 App.mpType = 'app'
 
 const app = new Vue({

@@ -21,9 +21,6 @@ import { getCompanyInfoByCode } from '@/api/user.js';
 export default {
   data() {
     return {
-      customStyle: {
-        fontSize: '12px'
-      },
 	  companycode: '',
 	  companyname:'',
 	  legalname:'',
