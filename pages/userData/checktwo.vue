@@ -10,6 +10,7 @@
 
 <script>
 import { checkCompany } from '@/api/user.js';
+import { getUserToken } from '@/utils/token.js';
 export default {
   data() {
     return {
@@ -29,7 +30,8 @@ export default {
 			uni.showToast({ title: '请输入企业法人身份证号码', icon: 'none' });
 			return;
 		}
-		const res = await checkCompany('2d34d7b18cf62de6547adde3ea992ae2', this.companycode, this.companyname, this.legalname, this.legalsfzhm);
+		let sessionId = getUserToken();
+		const res = await checkCompany(sessionId, this.companycode, this.companyname, this.legalname, this.legalsfzhm);
 		if(0 == res.respcode){
 			uni.showToast({ title: '核验成功', icon: 'none' });
 		}else{

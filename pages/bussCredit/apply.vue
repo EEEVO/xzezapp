@@ -16,46 +16,56 @@
 <script>
 import { sendVerificationCode } from '@/api/user.js';
 import { applyConfirm } from '@/api/function.js';
+import { getUserToken } from '@/utils/token.js';
+import { regExpObj } from '@/utils/common.js';
+
 export default {
   data() {
     return {
-      customStyle: {
-        fontSize: '12px'
-      },
       phoneNo: '', //手机号码
       verifyCode: ''
     };
   },
   methods: {
     async applyConfirm() {
-      if (!this.phoneNo) {
-        uni.showToast({ title: '请输入手机号码', icon: 'none' });
-        return;
-      }
-      if (!this.verifyCode) {
-        uni.showToast({ title: '请输入短信验证码', icon: 'none' });
-        return;
-      }
-      const res = await applyConfirm('2d34d7b18cf62de6547adde3ea992ae2', this.phoneNo, this.verifyCode);
-      if (0 == res.respcode) {
-        uni.navigateTo({
-          url: `./confirm?phoneNo=${this.phoneNo}&verifyCode=${this.verifyCode}`
-        });
-      } else {
-        uni.showToast({ title: res.respinfo, icon: 'none' });
-      }
+		if (!regExpObj.regExpPhone(this.phoneNo)) {
+			uni.showToast({
+				icon: 'none',
+				position: 'bottom',
+				title: '手机号格式不正确'
+			});
+			return;
+		}
+		if (!this.verifyCode) {
+			uni.showToast({ title: '请输入短信验证码', icon: 'none' });
+			return;
+		}
+		let sessionId = getUserToken();
+		const res = await applyConfirm(sessionId, this.phoneNo, this.verifyCode);
+		if (0 == res.respcode) {
+			uni.navigateTo({
+				url: `./confirm?phoneNo=${this.phoneNo}&verifyCode=${this.verifyCode}`
+			});
+		} else {
+			uni.showToast({ title: res.respinfo, icon: 'none' });
+		}
     },
     async sendCode() {
-      if (!this.phoneNo) {
-        uni.showToast({ title: '请输入手机号码', icon: 'none' });
-        return;
-      }
-      const res = await sendVerificationCode('2d34d7b18cf62de6547adde3ea992ae2', this.phoneNo);
-      if (0 == res.respcode) {
-        uni.showToast({ title: '发送成功', icon: 'none' });
-      } else {
-        uni.showToast({ title: res.respinfo, icon: 'none' });
-      }
+		if (!regExpObj.regExpPhone(this.phoneNo)) {
+			uni.showToast({
+				icon: 'none',
+				position: 'bottom',
+				title: '手机号格式不正确'
+			});
+			return;
+		}
+		let sessionId = getUserToken();
+		const res = await sendVerificationCode(sessionId, this.phoneNo);
+		if (0 == res.respcode) {
+			uni.showToast({ title: '发送成功', icon: 'none' });
+		} else {
+			uni.showToast({ title: res.respinfo, icon: 'none' });
+		}
     }
   },
   onLoad(option) {

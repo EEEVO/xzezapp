@@ -9,17 +9,18 @@
 		  	<text class="left">联系电话</text>
 		  	<text class="right">{{mangerTel}}</text>
 		  </view>
-		  <u-button class="btntel" @click="telManger">联系客户经理</u-button>
+		  <button class="btntel" @click="telManger">联系客户经理</button>
 	  </view>
 	  <view v-else>
 		  <view class="unapply">您未申请贷款产品，暂无专属客户经理</view>
-		  <u-button class="btntel" @click="applyNow">现在申请贷款</u-button>
+		  <button class="btntel"  @click="applyNow">现在申请贷款</button>
 	  </view>
   </view>
 </template>
 
 <script>
 import { getSalesman } from '@/api/function.js';
+import { getUserToken } from '@/utils/token.js';
 export default {
   data() {
     return {
@@ -34,11 +35,12 @@ export default {
   methods: {
     telManger() {
 	  uni.makePhoneCall({
-	      phoneNumber: this.mangerTel //仅为示例
+	      phoneNumber: this.mangerTel
 	  });
     },
 	async getSalesman(){
-		const res = await getSalesman('2d34d7b18cf62de6547adde3ea992ae2');
+		let sessionId = getUserToken();
+		const res = await getSalesman(sessionId);
 		if(0 == res.respcode){
 			this.mangerName = res.data.name;
 			this.mangerTel = res.data.phone;
@@ -61,7 +63,7 @@ export default {
 </script>
 
 <style scoped lang="less">
-	
+	@import "../../styles/index.less";
 	.row{
 		display: flex;
 		align-items: center;
@@ -78,15 +80,19 @@ export default {
 		}
 		.right{
 			margin-left: 10upx;
-			color: #00d3c4;
+			color: @base5;
 		}
 	}
 	.btntel{
-		display: flex;
+		display:flex;
+		justify-content: center;
+		align-items: center;
 		width: 250upx;
-		height: 70upx;
-		margin: 160upx auto;
-		font-size: 30upx;
+		height: 80upx;
+		margin-top: 150upx;
+		font-size: 32upx;
+		background-color: @base5;
+		color: #fff;
 	}
 	
 	.unapply{
