@@ -12,7 +12,7 @@
     </view>
     <view class="list" v-for="(list, list_i) in severList" :key="list_i">
       <view class="li" v-for="(li, li_i) in list" @tap="toPage(list_i, li_i)" :class="{ noborder: li_i == list.length - 1 }" hover-class="hover" :key="li.name">
-        <view class="icon"><image :src="'../../static/personalCenter/sever/' + li.icon"></image></view>
+        <view class="icon"><image :src="li.icon"></image></view>
         <view class="text">{{ li.name }}</view>
         <image class="to" src="../../static/personalCenter/to.png"></image>
       </view>
@@ -29,7 +29,8 @@ export default {
       isLogin: false,
       isH5Plus: false,
       userinfo: {},
-      severList: [[{ name: '申请记录', icon: 'applyRec.png', link: '../userData/applyRec' }, { name: '企业身份核验', icon: 'check.png', link: '../userData/check' }]]
+      severList: [[{ name: '申请记录', icon: `${this.$pic}/applyRec.png`, link: '../userData/applyRec' }, 
+				   { name: '企业身份核验', icon: `${this.$pic}/check.png`, link: '../userData/check' }]]
     };
   },
   onShow() {
