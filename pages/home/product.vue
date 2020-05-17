@@ -22,7 +22,7 @@
           <span>{{ item.maxterm }}{{ item.termunit }}</span>
         </view>
       </view>
-      <view><u-button :custom-style="customStyle" size="mini" @click="applyImmediate">立即申请</u-button></view>
+      <view><u-button size="mini" @click="applyImmediate">立即申请</u-button></view>
     </view>
   </view>
 </template>
@@ -39,12 +39,7 @@ export default {
     }
   },
   data() {
-    return {
-      customStyle: {
-        fontSize: '12px',
-        whiteSpace: 'nowrap'
-      }
-    };
+    return {};
   },
   methods: {
     goProductDetails() {

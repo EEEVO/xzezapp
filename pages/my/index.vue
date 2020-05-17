@@ -29,9 +29,13 @@ export default {
       isLogin: false,
       isH5Plus: false,
       userinfo: {},
-      severList: [[{ name: '申请记录', icon: `${this.$pic}/applyRec.png`, link: '../userData/applyRec' }, 
-				   { name: '企业身份核验', icon: `${this.$pic}/check.png`, link: '../userData/check' }]]
+      severList: [
+        [{ name: '申请记录', icon: `${this.$pic}/applyRec.png`, link: '../userData/applyRec' }, { name: '企业身份核验', icon: `${this.$pic}/check.png`, link: '../userData/check' }]
+      ]
     };
+  },
+  onLoad() {
+    this.login();
   },
   onShow() {
     this.login();
