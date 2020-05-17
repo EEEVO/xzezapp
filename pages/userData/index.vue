@@ -1,5 +1,5 @@
 <template>
-  <view>个人资料</view>
+  <view>正在开发中......</view>
 </template>
 
 <script>

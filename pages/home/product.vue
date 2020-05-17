@@ -15,11 +15,11 @@
       <view class="product-main-introduction">
         <view class="product-main-introduction-money">
           企业最高贷款
-          <span>{{ item.maxloan }}万</span>
+          <span classn="num">{{ item.maxloan }}万</span>
         </view>
         <view class="product-main-introduction-time">
           最高贷款期限
-          <span>{{ item.maxterm }}{{ item.termunit }}</span>
+          <span classn="num">{{ item.maxterm }}{{ item.termunit }}</span>
         </view>
       </view>
       <view><u-button size="mini" @click="applyImmediate">立即申请</u-button></view>
@@ -81,7 +81,7 @@ export default {
       display: flex;
       align-items: center;
       font-size: 14px;
-      color: #00d3c4;
+      color: #636568;
       .icon {
         flex-shrink: 0;
         width: 14px;
@@ -105,13 +105,14 @@ export default {
       flex-direction: column;
       align-items: center;
       justify-content: space-evenly;
+      margin-top: -6px;
       &-num {
         color: red;
         font-size: 20px;
       }
       &-subTitle {
         font-size: 13px;
-        color: #00d3c4;
+        color: #636568;
       }
     }
     &-introduction {
@@ -120,10 +121,12 @@ export default {
       align-items: center;
       justify-content: space-evenly;
       view {
-        font-size: 14px;
-        color: #00d3c4;
+        line-height: 20px;
+        font-size: 12px;
+        color: #636568;
         white-space: 'nowrap';
         span {
+          font-size: 14px;
           color: #333333;
         }
       }

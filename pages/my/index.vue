@@ -20,13 +20,13 @@
   </view>
 </template>
 <script>
-import { getUserToken, getAccountId } from '@/utils/token.js';
+import { getUserToken, setUserToken, getAccountId } from '@/utils/token.js';
 import { wxCode2Session } from '@/api/user.js';
 
 export default {
   data() {
     return {
-      isLogin: false,
+      isLogin: true,
       isH5Plus: false,
       userinfo: {},
       severList: [
@@ -38,9 +38,32 @@ export default {
     this.login();
   },
   onShow() {
-
+    this.login();
   },
   methods: {
+    login() {
+      wx.login({
+        success: async res => {
+          if (res.code) {
+            const tem = await wxCode2Session(res.code);
+            // 判断当前是否绑定了手机号,如果未绑定,则需要去绑定
+            console.log(tem, tem.data.phone);
+            if (!tem.data.phone) {
+              this.isLogin = false;
+            }
+            if (tem.respcode === 0) {
+              setUserToken(tem.data.sessionid);
+            } else {
+              uni.showToast({
+                title: tem.respinfo
+              });
+            }
+          } else {
+            console.log('登录失败！' + res.errMsg);
+          }
+        }
+      });
+    },
     getUserInfo(e) {
       console.log(e.detail.userInfo);
       this.userinfo = {

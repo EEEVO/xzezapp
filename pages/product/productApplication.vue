@@ -4,11 +4,11 @@
       <u-cell-group>
         <u-field v-model="companycode" label="统一社会信用代码" maxlength="18" @blur="getCompanyInfoByCode" :label-width="labelWidth"></u-field>
         <u-field v-model="companyname" label="公司名称" :label-width="labelWidth" :disabled="true"></u-field>
-        <u-field v-model="legalname" label="法定代表人" :label-width="labelWidth" :disabled="true" disabled></u-field>
-        <u-field v-model="legalsfzhm" label="法定身份证号码" maxlength="18" :label-width="labelWidth"></u-field>
+        <u-field v-model="legalname" label="法定代表人" :label-width="labelWidth" :disabled="true"></u-field>
+        <u-field v-model="legalsfzhm" label="法人身份证号码" maxlength="18" :label-width="labelWidth"></u-field>
         <u-field v-model="phone" label="手机号码" maxlength="11" :label-width="labelWidth"></u-field>
         <u-field v-model="code" label="验证码" placeholder="请填写验证码" :label-width="labelWidth">
-          <u-button size="mini" slot="button" type="success" :custom-style="customStyle" @tap="getCode">{{ codeText }}</u-button>
+          <u-button size="mini" slot="button" type="success" @tap="getCode">{{ codeText }}</u-button>
         </u-field>
         <u-verification-code ref="uCode" @change="codeChange"></u-verification-code>
         <u-field v-model="loanamount" label="拟融资额度(万元)" :label-width="labelWidth"></u-field>
@@ -17,7 +17,6 @@
           v-model="guarantee"
           :disabled="true"
           label="担保方式"
-          placeholder="请选择担保方式"
           right-icon="arrow-down-fill"
           :label-width="labelWidth"
         ></u-field>
@@ -25,8 +24,7 @@
           @click="showAction('servicehall', 'YWWDList')"
           v-model="servicehall"
           :disabled="true"
-          label="担保机构"
-          placeholder="请选择担保机构"
+          label="选择办理机构"
           right-icon="arrow-down-fill"
           :label-width="labelWidth"
         ></u-field>
@@ -45,10 +43,6 @@ export default {
   data() {
     return {
       labelWidth: 230,
-      customStyle: {
-        fontSize: '12px',
-        whiteSpace: 'nowrap'
-      },
       productId: '',
       selectKey: '',
       selectList: [
@@ -177,12 +171,6 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /deep/ .fild-body {
-    justify-content: space-between;
-    /deep/ .u-flex-1 {
-      flex: 1;
-    }
-  }
   .footer {
     width: 100%;
     display: flex;

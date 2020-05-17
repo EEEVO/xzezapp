@@ -13,7 +13,7 @@ unpackage
 *.vue.js.map
 
 .env.local
-.env.*.localÏ
+.env.*.local
 
 # Log files
 npm-debug.log*
