@@ -2,20 +2,36 @@
   <view class="main">
     <view>
       <u-cell-group>
-        <u-field v-model="mobile" label="统一社会信用代码" :label-width="labelWidth"></u-field>
-        <u-field v-model="code" label="公司名称" :label-width="labelWidth"></u-field>
-        <u-field v-model="code" label="法定代表人" :label-width="labelWidth"></u-field>
-        <u-field v-model="code" label="法定身份证号码" :label-width="labelWidth"></u-field>
-        <u-field v-model="code" label="手机号码" :label-width="labelWidth"></u-field>
+        <u-field v-model="companycode" label="统一社会信用代码" maxlength="18" @blur="getCompanyInfoByCode" :label-width="labelWidth"></u-field>
+        <u-field v-model="companyname" label="公司名称" :label-width="labelWidth" :disabled="true"></u-field>
+        <u-field v-model="legalname" label="法定代表人" :label-width="labelWidth" :disabled="true" disabled></u-field>
+        <u-field v-model="legalsfzhm" label="法定身份证号码" maxlength="18" :label-width="labelWidth"></u-field>
+        <u-field v-model="phone" label="手机号码" maxlength="11" :label-width="labelWidth"></u-field>
         <u-field v-model="code" label="验证码" placeholder="请填写验证码" :label-width="labelWidth">
           <u-button size="mini" slot="button" type="success" :custom-style="customStyle" @tap="getCode">{{ codeText }}</u-button>
         </u-field>
         <u-verification-code ref="uCode" @change="codeChange"></u-verification-code>
-        <u-field v-model="code" label="拟融资额度(万元)" :label-width="labelWidth"></u-field>
-        <u-field @click="showAction" v-model="sex" :disabled="true" label="担保方式" placeholder="请选择担保方式" right-icon="arrow-down-fill" :label-width="labelWidth"></u-field>
-        <u-field v-model="code" label="选择办理机构" :label-width="labelWidth"></u-field>
+        <u-field v-model="loanamount" label="拟融资额度(万元)" :label-width="labelWidth"></u-field>
+        <u-field
+          @click="showAction('guarantee', 'DBFSList')"
+          v-model="guarantee"
+          :disabled="true"
+          label="担保方式"
+          placeholder="请选择担保方式"
+          right-icon="arrow-down-fill"
+          :label-width="labelWidth"
+        ></u-field>
+        <u-field
+          @click="showAction('servicehall', 'YWWDList')"
+          v-model="servicehall"
+          :disabled="true"
+          label="担保机构"
+          placeholder="请选择担保机构"
+          right-icon="arrow-down-fill"
+          :label-width="labelWidth"
+        ></u-field>
       </u-cell-group>
-      <u-action-sheet @click="clickItem" :list="sexList" v-model="show"></u-action-sheet>
+      <u-action-sheet @click="clickItem" :list="selectList" v-model="show"></u-action-sheet>
     </view>
     <view class="footer"><u-button @click="applyImmediate">提交</u-button></view>
   </view>
@@ -23,20 +39,19 @@
 
 <script>
 import { getUserToken } from '@/utils/token.js';
+import { getBindCompanyInfo, requestProduct, getCompanyInfoByCode, checkCompany, getSelectorOption } from '@/api/home.js';
 
 export default {
   data() {
     return {
       labelWidth: 230,
-
-      isLogin: false, // 当前是否登录
       customStyle: {
         fontSize: '12px',
         whiteSpace: 'nowrap'
       },
-      // 担保方式
-      sex: '',
-      sexList: [
+      productId: '',
+      selectKey: '',
+      selectList: [
         {
           text: '担保方式1'
         },
@@ -47,21 +62,84 @@ export default {
           text: '担保方式3'
         }
       ],
+      DBFSList: [], // 担保方式
+      YWWDList: [], // 办理网点
       show: false,
       // 验证码
+      codeText: '发送验证码',
+      /**
+       * 表单信息
+       */
+      companycode: '',
+      companyname: '',
+      legalname: '',
+      legalsfzhm: '',
+      phone: '',
       code: '',
-      codeText: '发送验证码'
+      loanamount: '',
+      guarantee: '',
+      servicehall: ''
     };
   },
   mounted() {
-    this.isLogin = getUserToken() ? true : false;
+    this.getBindCompanyInfo();
+    this.getSelectorOption();
   },
   methods: {
+    async getBindCompanyInfo() {
+      const res = await getBindCompanyInfo(getUserToken());
+      if (res.respcode === 0) {
+        if (res.data.length > 0) {
+          this.companycode = res.data[0].companycode;
+          this.companyname = res.data[0].companyname;
+          this.legalname = res.data[0].legalname;
+          this.legalsfzhm = res.data[0].legalsfzhm;
+          this.phone = res.data[0].phone;
+        }
+      } else {
+        uni.showToast({
+          title: res.respinfo
+        });
+      }
+    },
+    async getSelectorOption() {
+      const res = await getSelectorOption('DBFS,YWWD');
+      this.DBFSList = res.data.DBFS;
+      this.YWWDList = res.data.YWWD;
+    },
     codeChange(text) {
       this.codeText = text;
     },
-    applyImmediate() {
-      console.log('立即申请');
+    async applyImmediate() {
+      const res = await requestProduct(
+        getUserToken(),
+        this.productId,
+        this.companycode,
+        this.companyname,
+        this.legalname,
+        this.legalsfzhm,
+        this.phone,
+        this.code,
+        this.loanamount,
+        this.guarantee,
+        this.servicehall
+      );
+      if (res.respcode === 0) {
+        uni.showToast({
+          title: '您的申请已提交，客户经理会与您取得联系'
+        });
+        setTimeout(() => uni.navigateBack(), 2000);
+      } else {
+        uni.showToast({
+          icon: 'error',
+          title: res.respinfo
+        });
+      }
+    },
+    async getCompanyInfoByCode() {
+      const res = await getCompanyInfoByCode(getUserToken(), this.companycode);
+      this.companyname = res.data.companyname;
+      this.legalname = res.data.legalname;
     },
     getCode() {
       if (this.$refs.uCode.canGetCode) {
@@ -78,15 +156,17 @@ export default {
         this.$u.toast('倒计时结束后再发送');
       }
     },
-    showAction() {
+    showAction(parma, arrName) {
       this.show = true;
+      this.selectKey = parma;
+      this.selectList = this[arrName];
     },
     clickItem(index) {
-      this.sex = this.sexList[index].text;
+      this[this.selectKey] = this.selectList[index].text;
     }
   },
   onLoad(option) {
-    console.log(option);
+    this.productId = option.productId;
   }
 };
 </script>
