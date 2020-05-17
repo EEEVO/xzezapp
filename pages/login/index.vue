@@ -1,7 +1,7 @@
 <template>
   <view class="content">
     <!-- 头部logo -->
-    <view class="header"><image :src="logoImage"></image></view>
+    <view class="header"></view>
     <!-- 主体表单 -->
     <view class="main">
       <wInput v-model="phoneData" type="text" maxlength="11" placeholder="手机号"></wInput>
@@ -14,9 +14,9 @@
 <script>
 import wInput from '@/components/watch-login/watch-input.vue'; //input
 import wButton from '@/components/watch-login/watch-button.vue'; //button
-import { verificationMsg, login } from '@/api/user.js';
 import { regExpObj } from '@/utils/common.js';
-import { setUserToken, setAccountId } from '@/utils/token.js';
+import { getUserToken, setUserToken, setAccountId } from '@/utils/token.js';
+import { sendVerificationCode, bindPhone } from '@/api/user.js';
 
 export default {
   components: {
@@ -29,7 +29,6 @@ export default {
       logoImage: '',
       phoneData: '17762864299', //用户/电话
       verCode: '', //验证码
-      isNickName: '', // 是否需要设置用户名
       isRotate: false //是否加载旋转
     };
   },
@@ -47,9 +46,7 @@ export default {
       }
       //获取验证码
       this.$refs.runCode.$emit('runCode');
-      const res = await verificationMsg(this.phoneData);
-      console.log('发送验证码');
-      this.isNickName = res.result.need_set_name;
+      const res = await sendVerificationCode(this.phoneData);
       // 终止倒计时（用于突然需要终止倒计时的场景）
       // this.$refs.runCode.$emit('runCode', 0);
     },
@@ -76,38 +73,24 @@ export default {
         return;
       }
       this.isRotate = true;
-      uni.showLoading({
-        title: '登录中'
-      });
-      // 需要设置用户名
-      if (this.isNickName) {
-        uni.showLoading({
-          title: '当前需要认证名字'
-        });
-      } else {
-        // 不需要设置用户名
-        const res = await login(this.phoneData, this.verCode);
+      const res = await bindPhone(getUserToken(), this.phoneData, this.verCode);
+      if (res.respcode === 0) {
+        this.isRotate = false;
         uni.showToast({
-          icon: 'success',
           position: 'bottom',
-          title: '登录成功'
+          title: '绑定成功'
         });
-        // 保存用户信息
-        setUserToken(res.result.access_token);
-        setAccountId(res.result.account_id);
-        uni.switchTab({
-          url: '/pages/my/index'
-        });
+        uni.navigateBack();
       }
-    },
-    login_weixin() {
-      //微信登录
-      uni.showToast({
-        icon: 'none',
-        position: 'bottom',
-        title: '...'
-      });
     }
+    // login_weixin() {
+    //   //微信登录
+    //   uni.showToast({
+    //     icon: 'none',
+    //     position: 'bottom',
+    //     title: '...'
+    //   });
+    // }
   }
 };
 </script>
@@ -123,19 +106,11 @@ export default {
   /* 头部 logo */
   .header {
     width: 161upx;
-    height: 161upx;
-    box-shadow: 0upx 0upx 60upx 0upx rgba(0, 0, 0, 0.1);
-    border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.5);
+    height: 120upx;
     margin-top: 128upx;
     margin-bottom: 72upx;
     margin-left: auto;
     margin-right: auto;
-  }
-  .header image {
-    width: 161upx;
-    height: 161upx;
-    border-radius: 50%;
   }
 
   /* 主体 */

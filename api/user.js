@@ -13,9 +13,23 @@ export const sendVerificationCode = (sessionid, phone) => {
   })
 }
 
+/**
+ * 获取sessionId与已绑手机号
+ */
 export const wxCode2Session = (code) => {
   return http.post('wxCode2Session.do', {
     code
+  })
+}
+
+/**
+ * 绑定手机号
+ */
+export const bindPhone = (sessionid, phone, verifycode) => {
+  return http.post('bindPhone.do', {
+    sessionid,
+    phone,
+    verifycode
   })
 }
 
