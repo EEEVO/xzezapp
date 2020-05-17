@@ -18,8 +18,8 @@ export default {
   data() {
     return {
 		severList: [[{ name: '房产评估', icon: 'house.png', link: '../userData/index' }, 
-					 { name: '业务授权', icon: 'grant.png', link: '../bussCredit/apply' },
-					 { name: '征信授权', icon: 'credit.png', link: '../bussCredit/apply' },
+					 { name: '业务授权', icon: 'grant.png', link: '../bussCredit/bizApply' },
+					 { name: '征信授权', icon: 'credit.png', link: '../bussCredit/creditApply' },
 					 { name: '客户经理', icon: 'manger.png', link: '../custManger/detail' }]]
 	};
   },

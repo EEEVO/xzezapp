@@ -1,0 +1,119 @@
+<template>
+  <view class="content">
+	  <u-checkbox-group class="bookGroup">
+		  <u-checkbox
+		  	@change="checkboxChange" 
+		  	v-model="book.checked" 
+		  	:name="book.name"
+		  >{{book.name}}</u-checkbox>
+	  </u-checkbox-group>
+	
+    <u-cell-group>
+      <u-field v-model="phoneNo" label="手机号" maxlength="11" placeholder="请输入手机号码"></u-field>
+      <u-field v-model="verifyCode" label="验证码" placeholder="请输入验证码"><u-button size="mini" slot="button" type="success" @tap="sendCode">获取验证码</u-button></u-field>
+    </u-cell-group>
+    <u-button class="btnconfirm" :disabled="disabled" @click="applyConfirm">确认授权</u-button>
+  </view>
+</template>
+
+<script>
+import { sendVerificationCode } from '@/api/user.js';
+import { confimBizAuthorization } from '@/api/function.js';
+import { getUserToken } from '@/utils/token.js';
+import { regExpObj } from '@/utils/common.js';
+
+export default {
+  data() {
+    return {
+      phoneNo: '', //手机号码
+      verifyCode: '',
+	  book: {
+		  name: '业务授权书',
+		  checked: false
+	  },
+	  disabled: false,
+	  bookShow: false
+    };
+  },
+  methods: {
+	checkboxChange(e) {
+		this.book.checked = e.value;
+		if(e.value){
+			this.bookShow = true;
+		}
+	},
+	closeBook(){
+		this.bookShow = false;
+	},
+    async applyConfirm() {
+      if (!regExpObj.regExpPhone(this.phoneNo)) {
+        uni.showToast({
+          icon: 'none',
+          position: 'bottom',
+          title: '手机号格式不正确'
+        });
+        return;
+      }
+      if (!this.verifyCode) {
+        uni.showToast({ title: '请输入短信验证码', icon: 'none' });
+        return;
+      }
+      let sessionId = getUserToken();
+	  if(!this.book.checked){
+		  uni.showToast({ title: '请选中业务授权书', icon: 'none' });
+		  return;
+	  }
+      const res = await confimBizAuthorization(sessionId, this.phoneNo, this.verifyCode);
+      if (0 == res.respcode) {
+        uni.showToast({ title: '业务授权成功', icon: 'none' });
+		this.disabled = true;
+      } else {
+        uni.showToast({ title: res.respinfo, icon: 'none' });
+      }
+    },
+    async sendCode() {
+      if (!regExpObj.regExpPhone(this.phoneNo)) {
+        uni.showToast({
+          icon: 'none',
+          position: 'bottom',
+          title: '手机号格式不正确'
+        });
+        return;
+      }
+      let sessionId = getUserToken();
+      const res = await sendVerificationCode(sessionId, this.phoneNo);
+      if (0 == res.respcode) {
+        uni.showToast({ title: '发送成功', icon: 'none' });
+      } else {
+        uni.showToast({ title: res.respinfo, icon: 'none' });
+      }
+    }
+  },
+  onLoad(option) {
+    console.log(option);
+  }
+};
+</script>
+
+<style scoped lang="less">
+.content {
+  .btnconfirm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 220upx;
+    height: 80upx;
+    margin: 60upx auto;
+    font-size: 30upx;
+    color: #fff;
+  }
+	  
+  .bookGroup{
+	  margin: 50upx;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+  }
+  
+}
+</style>

@@ -38,9 +38,14 @@
       "navigationBarTitleText": "产品申请"
     }
   }, {
-    "path": "pages/bussCredit/apply",
+    "path": "pages/bussCredit/bizApply",
     "style": {
       "navigationBarTitleText": "业务授权"
+    }
+  },{
+    "path": "pages/bussCredit/creditApply",
+    "style": {
+      "navigationBarTitleText": "征信授权"
     }
   }, {
     "path": "pages/bussCredit/confirm",

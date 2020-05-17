@@ -1,16 +1,24 @@
 <template>
   <view class="content">
+	  <u-checkbox-group class="bookGroup">
+		  <u-checkbox
+		  	@change="checkboxChange" 
+		  	v-model="book.checked" 
+		  	:name="book.name"
+		  >{{book.name}}</u-checkbox>
+	  </u-checkbox-group>
+	
     <u-cell-group>
       <u-field v-model="phoneNo" label="手机号" maxlength="11" placeholder="请输入手机号码"></u-field>
       <u-field v-model="verifyCode" label="验证码" placeholder="请输入验证码"><u-button size="mini" slot="button" type="success" @tap="sendCode">获取验证码</u-button></u-field>
     </u-cell-group>
-    <u-button class="btnconfirm" @click="applyConfirm">确认授权</u-button>
+    <u-button class="btnconfirm" :disabled="disabled" @click="applyConfirm">确认授权</u-button>
   </view>
 </template>
 
 <script>
 import { sendVerificationCode } from '@/api/user.js';
-import { applyConfirm } from '@/api/function.js';
+import { confimCreditAuthorization } from '@/api/function.js';
 import { getUserToken } from '@/utils/token.js';
 import { regExpObj } from '@/utils/common.js';
 
@@ -18,10 +26,19 @@ export default {
   data() {
     return {
       phoneNo: '', //手机号码
-      verifyCode: ''
+      verifyCode: '',
+	  book: {
+		  name: '征信授权书',
+		  checked: false
+	  },
+	  disabled: false,
+	  checkList: []
     };
   },
   methods: {
+	checkboxChange(e) {
+		this.book.checked = e.value;
+	},
     async applyConfirm() {
       if (!regExpObj.regExpPhone(this.phoneNo)) {
         uni.showToast({
@@ -36,11 +53,14 @@ export default {
         return;
       }
       let sessionId = getUserToken();
-      const res = await applyConfirm(sessionId, this.phoneNo, this.verifyCode);
+	  if(!this.book.checked){
+		  uni.showToast({ title: '请选中征信授权书', icon: 'none' });
+		  return;
+	  }
+      const res = await confimCreditAuthorization(sessionId, this.phoneNo, this.verifyCode);
       if (0 == res.respcode) {
-        uni.navigateTo({
-          url: `./confirm?phoneNo=${this.phoneNo}&verifyCode=${this.verifyCode}`
-        });
+        uni.showToast({ title: '征信授权成功', icon: 'none' });
+		this.disabled = true;
       } else {
         uni.showToast({ title: res.respinfo, icon: 'none' });
       }
@@ -81,5 +101,13 @@ export default {
     font-size: 30upx;
     color: #fff;
   }
+	  
+  .bookGroup{
+	  margin: 50upx;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+  }
+  
 }
 </style>

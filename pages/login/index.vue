@@ -27,7 +27,7 @@ export default {
     return {
       //logo图片 base64
       logoImage: '',
-      phoneData: '17762864299', //用户/电话
+      phoneData: '', //用户/电话
       verCode: '', //验证码
       isRotate: false //是否加载旋转
     };

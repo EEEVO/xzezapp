@@ -1,9 +1,18 @@
 import http from '@/utils/request.js'
 
 /**
- * 确认授权
+ * 获取业务授权书内容
  */
-export const applyConfirm = (sessionid, phone, verifycode) => {
+export const getBizAuthorization = () => {
+  return http.get('getBizAuthorization.do', {
+    params: {}
+  })
+}
+
+/**
+ * 业务授权确认
+ */
+export const confimBizAuthorization = (sessionid, phone, verifycode) => {
   return http.get('confimBizAuthorization.do', {
     params: {
       sessionid,
