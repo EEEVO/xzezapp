@@ -18,6 +18,7 @@
 
 <script>
 import { getCompanyInfoByCode } from '@/api/user.js';
+import { getUserToken } from '@/utils/token.js';
 export default {
   data() {
     return {
@@ -38,7 +39,8 @@ export default {
 	    });
     },
 	async getCompanyInfoByCode() {
-		const res = await getCompanyInfoByCode('2d34d7b18cf62de6547adde3ea992ae2', this.companycode);
+		let sessionId = getUserToken();
+		const res = await getCompanyInfoByCode(sessionId, this.companycode);
 		
 		if(0 == res.respcode){
 			this.companyname = res.data.companyname;

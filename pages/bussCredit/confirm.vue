@@ -7,6 +7,7 @@
 
 <script>
 import { getCreditAuthorization, confimCreditAuthorization } from '@/api/function.js';
+import { getUserToken } from '@/utils/token.js';
 export default {
   data() {
     return {
@@ -21,7 +22,8 @@ export default {
   },
   methods: {
     async confirm() {
-		const res = await confimCreditAuthorization('2d34d7b18cf62de6547adde3ea992ae2', this.phoneNo, this.verifyCode);
+		let sessionId = getUserToken();
+		const res = await confimCreditAuthorization(sessionId, this.phoneNo, this.verifyCode);
 		if(0 == res.respcode){
 			uni.showToast({ title: '征信授权成功', icon: 'none' });
 			this.disabled = true;

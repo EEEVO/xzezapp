@@ -27,13 +27,13 @@ export default {
   methods: {
 	  //用户点击列表项
 	  toPage(list_i, li_i) {
-	    // if (getUserToken()) {
+	    if (getUserToken()) {
 	      uni.navigateTo({
 	        url: this.severList[list_i][li_i].link
 	      });
-	    // } else {
-	      // uni.showToast({ title: '请先登录', icon: 'none' });
-	    // }
+	    } else {
+	      uni.showToast({ title: '请先登录', icon: 'none' });
+	    }
 	  }
   },
   watch: {}

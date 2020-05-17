@@ -23,6 +23,7 @@
 
 <script>
 import { getApplyHis } from '@/api/user.js';
+import { getUserToken } from '@/utils/token.js';
 export default {
   data() {
     return {
@@ -32,7 +33,8 @@ export default {
   },
   methods: {
 	  async getApplyHis() {
-		  const res = await getApplyHis('2d34d7b18cf62de6547adde3ea992ae2');
+		  let sessionId = getUserToken();
+		  const res = await getApplyHis(sessionId);
 		  console.log(res);
 		  if(0 == res.respcode){
 			 this.severList = res.data;
