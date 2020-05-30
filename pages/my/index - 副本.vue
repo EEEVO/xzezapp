@@ -20,18 +20,17 @@
   </view>
 </template>
 <script>
-import { getUserToken, setUserToken, getAccountId, setLoginInfo, getLoginInfo } from '@/utils/token.js';
-import { wxCode2Session, registerUser } from '@/api/user.js';
+import { getUserToken, setUserToken, getAccountId } from '@/utils/token.js';
+import { wxCode2Session } from '@/api/user.js';
 
 export default {
   data() {
     return {
-      isLogin: false,
+      isLogin: true,
       isH5Plus: false,
       userinfo: {},
       severList: [
-        [{ name: '申请记录', icon: `${this.$pic}/applyRec.png`, link: '../userData/applyRec' }, 
-		 { name: '企业身份核验', icon: `${this.$pic}/check.png`, link: '../userData/check' }]
+        [{ name: '申请记录', icon: `${this.$pic}/applyRec.png`, link: '../userData/applyRec' }, { name: '企业身份核验', icon: `${this.$pic}/check.png`, link: '../userData/check' }]
       ]
     };
   },
@@ -49,8 +48,11 @@ export default {
             const tem = await wxCode2Session(res.code);
             // 判断当前是否绑定了手机号,如果未绑定,则需要去绑定
             console.log(tem, tem.data.phone);
+            if (!tem.data.phone) {
+              this.isLogin = false;
+            }
             if (tem.respcode === 0) {
-			  setLoginInfo(tem.data);
+              setUserToken(tem.data.sessionid);
             } else {
               uni.showToast({
                 title: tem.respinfo
@@ -67,10 +69,10 @@ export default {
       this.userinfo = {
         ...e.detail.userInfo
       };
-	  const sessionid = getLoginInfo().sessionid;
-	  console.log(sessionid);
-      const tem = registerUser(sessionid, this.userinfo.nickName, this.userinfo.avatarUrl, this.userinfo.gender);
-	  console.log(tem);
+      // TODO:获取用户信息之后,去检查当前微信是否绑定过手机号,如果绑定过就不跳转到绑定页
+      uni.navigateTo({
+        url: '../login/index'
+      });
     },
     //用户点击列表项
     toPage(list_i, li_i) {

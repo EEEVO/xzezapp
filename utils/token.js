@@ -7,9 +7,12 @@ import {
 
 const TOKEN = 'TOKEN'
 const ACCOUNT_ID = 'ACCOUNT_ID'
+const LOGIN_INFO = 'LOGIN_INFO'
+
+export const setLoginInfo = (data) => dataStroage.setStroage(LOGIN_INFO, data)
+export const getLoginInfo = () => dataStroage.getStroage(LOGIN_INFO)
 
 export const setUserToken = (data) => dataStroage.setStroage(TOKEN, data)
-
 // 获取UserToken
 export const getUserToken = () => dataStroage.getStroage(TOKEN)
 

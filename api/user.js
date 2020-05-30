@@ -67,3 +67,15 @@ export const checkCompany = (sessionid, companycode, companyname, legalname, leg
     legalsfzhm
   })
 }
+
+/**
+ * 注册用户
+ */
+export const registerUser = (code) => {
+  return http.post('registerUser.do', {
+	  sessionid,
+	  nickName,
+	  avatarUrl,
+	  gender
+  })
+}
